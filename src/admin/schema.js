@@ -2,6 +2,7 @@
 // and blank templates for lists that can start empty.
 
 export const SECTIONS = [
+  { key: 'visitors', label: 'Visitors', hint: 'How many people visit the website.', tool: true },
   { key: 'hero', label: 'Hero', hint: 'Video, headline and buttons at the top of the home page.' },
   { key: 'about', label: 'About panels', hint: 'The three expanding panels (Jadeer / Mission / Vision).' },
   { key: 'services', label: 'Services', hint: 'The "What we do" cards.' },

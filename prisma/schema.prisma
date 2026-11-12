@@ -50,3 +50,26 @@ model Application {
   @@index([jobId])
   @@index([createdAt])
 }
+
+/// One row per page opened on the public site (visitor statistics).
+/// No IP address or cookie is stored: `visitor` is a one-way hash that changes every day,
+/// so a person is counted once per day and can't be followed from one day to the next.
+model PageView {
+  id        Int      @id @default(autoincrement())
+  day       String   // YYYY-MM-DD in the site's time zone
+  path      String
+  visitor   String
+  device    String   // desktop | mobile | tablet
+  lang      String   // ar | en
+  source    String   // Direct, Google, Facebook, … or the referring site
+  createdAt DateTime @default(now())
+
+  @@index([day])
+}
+
+/// Random value per day used to make the visitor hash. Old ones are deleted, which makes
+/// earlier hashes impossible to link to anyone.
+model StatSalt {
+  day  String @id
+  salt String
+}

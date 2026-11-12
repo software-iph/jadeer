@@ -3,6 +3,7 @@ import { api } from './api'
 import { SECTIONS } from './schema'
 import { Field } from './Editor'
 import CareersAdmin from './CareersAdmin'
+import VisitorsAdmin from './VisitorsAdmin'
 import { useContentContext } from '../content-context'
 import './admin.css'
 
@@ -172,11 +173,13 @@ function Dashboard({ user, onLogout }) {
               <div className="adm-sec-head">
                 <div>
                   <h1>{meta.label}</h1>
-                  <p>{meta.hint}{section !== 'careers' && ' Each text has an English and an Arabic box.'}</p>
+                  <p>{meta.hint}{!meta.tool && section !== 'careers' && ' Each text has an English and an Arabic box.'}</p>
                 </div>
-                <button type="button" className="adm-btn ghost small" onClick={resetSection}>Restore defaults</button>
+                {!meta.tool && <button type="button" className="adm-btn ghost small" onClick={resetSection}>Restore defaults</button>}
               </div>
-              {section === 'careers' ? (
+              {section === 'visitors' ? (
+                <VisitorsAdmin />
+              ) : section === 'careers' ? (
                 <CareersAdmin
                   careers={draft.careers}
                   onChange={(v) => setDraft((cur) => ({ ...cur, careers: v }))}

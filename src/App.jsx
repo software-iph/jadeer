@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useRef } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Loader from './components/Loader'
 import Nav from './components/Nav'
@@ -6,6 +6,8 @@ import Footer from './components/Footer'
 import Home from './pages/Home'
 import Careers from './pages/Careers'
 import Contact from './pages/Contact'
+import { useLang } from './i18n'
+import { trackPage } from './track'
 
 // The dashboard is only downloaded when someone opens /admin.
 const Admin = lazy(() => import('./admin/Admin'))
@@ -16,11 +18,22 @@ function ScrollToTop() {
   return null
 }
 
+/** Counts each page shown (no cookies) for the dashboard's Visitors page. */
+function TrackPageViews() {
+  const { pathname } = useLocation()
+  const { lang } = useLang()
+  const langRef = useRef(lang)
+  langRef.current = lang
+  useEffect(() => { trackPage(pathname, langRef.current) }, [pathname])
+  return null
+}
+
 function Site() {
   return (
     <>
       <Loader />
       <ScrollToTop />
+      <TrackPageViews />
       <Nav />
       <Routes>
         <Route path="/" element={<Home />} />

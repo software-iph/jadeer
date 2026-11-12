@@ -162,3 +162,46 @@ textarea.adm-input{resize:vertical;line-height:1.55}
   .adm-side-account span{font-size:.78rem;color:var(--a-mut);padding:.2rem .8rem .4rem;overflow:hidden;text-overflow:ellipsis}
   .adm-top-r .adm-status{order:3;width:100%;text-align:right}
 }
+
+/* visitors (statistics) */
+.vs{display:grid;gap:1rem}
+.vs-help{margin:0}
+.vs-card{background:var(--a-card);border:1px solid var(--a-line);border-radius:12px;padding:1.1rem 1.2rem;min-width:0}
+.vs-card h3{font-size:1.02rem;font-weight:600;color:var(--a-teal)}
+.vs-card h3 small{font-size:.78rem;font-weight:400;color:var(--a-mut);margin-left:.6rem}
+.vs-filters{display:flex;flex-wrap:wrap;gap:.8rem 1rem;align-items:flex-end}
+.vs-filters label{display:grid;gap:.3rem;font-size:.78rem;font-weight:600;color:var(--a-mut)}
+.vs-filters select,.vs-filters input{width:auto;min-width:130px;padding:.45rem .6rem}
+.vs-filter-btns{display:flex;gap:.5rem;margin-left:auto}
+.vs-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem}
+.vs-kpi{display:grid;gap:.3rem;align-content:start}
+.vs-kpi b{font-size:1.9rem;line-height:1.1;font-weight:700;color:var(--a-teal);font-variant-numeric:tabular-nums}
+.vs-kpi span{font-size:.84rem;color:var(--a-mut)}
+.vs-card-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.8rem;flex-wrap:wrap}
+.vs-chart{position:relative;width:100%;overflow:hidden}
+.vs-chart svg{display:block}
+.vs-grid-line{stroke:#eee9df;stroke-width:1}
+.vs-base{stroke:#c9c1b2;stroke-width:1}
+.vs-tick{font-size:11px;fill:var(--a-mut);font-variant-numeric:tabular-nums}
+.vs-bar{fill:var(--a-teal);transition:opacity .15s}
+.vs-bar.on{fill:var(--a-gold)}
+.vs-bar.dim{opacity:.55}
+.vs-tip{position:absolute;transform:translate(-50%,-100%);pointer-events:none;background:#fff;border:1px solid var(--a-line);box-shadow:0 8px 24px -10px rgba(19,59,67,.35);border-radius:8px;padding:.45rem .7rem;display:grid;gap:.1rem;font-size:.8rem;white-space:nowrap;color:var(--a-ink)}
+.vs-tip b{font-weight:600;color:var(--a-teal)}
+.vs-none{text-align:center;margin-top:.5rem}
+.vs-table-wrap{max-height:340px;overflow:auto}
+.vs-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.vs-table th,.vs-table td{padding:.45rem .6rem;border-bottom:1px solid var(--a-line);text-align:right;font-variant-numeric:tabular-nums}
+.vs-table th:first-child,.vs-table td:first-child{text-align:left}
+.vs-table th{position:sticky;top:0;background:#fff;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--a-mut)}
+.vs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media(max-width:800px){.vs-grid{grid-template-columns:1fr}}
+.vs-rank{width:100%;border-collapse:collapse;margin-top:.6rem;font-size:.88rem}
+.vs-rank th{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--a-mut);text-align:right;padding:.2rem 0 .4rem .9rem;font-weight:600}
+.vs-rank td{padding:3px 0;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.vs-rank td+td{padding-left:.9rem;width:1%}
+.vs-rank td:first-child{width:100%}
+.vs-rank button{position:relative;display:block;width:100%;text-align:left;border:0;background:none;font:inherit;color:var(--a-ink);padding:.4rem .6rem;cursor:pointer;border-radius:4px;overflow:hidden}
+.vs-rank button i{position:absolute;inset:0 auto 0 0;background:#efe7d9;border-radius:4px}
+.vs-rank button:hover i{background:#e6d8bf}
+.vs-rank button span{position:relative;display:block;overflow:hidden;text-overflow:ellipsis}

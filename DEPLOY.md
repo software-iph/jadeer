@@ -127,6 +127,13 @@ cd /opt/jadeer && git pull && docker compose up -d --build
 ```
 Database changes are applied automatically when the app starts. Your content, uploads and CVs are kept.
 
+## Visitor statistics
+
+The dashboard's **Visitors** page counts visits without cookies (no IP addresses stored; bots and
+signed-in dashboard users are not counted). Days follow Libya time. Optional settings in `.env`
+(add them under `app: environment:` in `docker-compose.yml` to use them):
+`STATS_TZ` (default `Africa/Tripoli`) and `STATS_KEEP_DAYS` (default `730` — older visits are deleted).
+
 ## Everyday commands
 
 | Task | Command |

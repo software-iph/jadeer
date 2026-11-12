@@ -11,6 +11,7 @@ import jwt from 'jsonwebtoken'
 import { PrismaClient } from '@prisma/client'
 import defaultContent from '../src/content.js'
 import { registerApplications } from './applications.js'
+import { registerStats } from './stats.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
@@ -77,6 +78,11 @@ function requireAuth(req, res, next) {
   } catch {
     res.status(401).json({ error: 'Not signed in' })
   }
+}
+
+/** True when the request comes from someone signed in to the dashboard. */
+function isAdmin(req) {
+  try { jwt.verify(req.cookies[COOKIE] || '', JWT_SECRET); return true } catch { return false }
 }
 
 // Very small in-memory limiter for login attempts (per IP).
@@ -200,6 +206,9 @@ app.use('/uploads', express.static(UPLOAD_DIR, {
 
 // ---------- job applications ----------
 registerApplications(app, { prisma, requireAuth, wrap, getContent, root: ROOT })
+
+// ---------- visitor statistics ----------
+registerStats(app, { prisma, requireAuth, wrap, isAdmin })
 
 // ---------- production: serve the built site ----------
 if (PROD && fs.existsSync(DIST_DIR)) {

@@ -21,6 +21,7 @@ export const api = {
   uploads: () => request('GET', '/api/uploads'),
   builtin: () => request('GET', '/api/media/builtin'),
   deleteUpload: (id) => request('DELETE', `/api/uploads/${id}`),
+  stats: (params) => request('GET', '/api/stats?' + new URLSearchParams(params)),
   applications: () => request('GET', '/api/applications'),
   setApplicationStatus: (id, status) => request('PATCH', `/api/applications/${id}`, { status }),
   deleteApplication: (id) => request('DELETE', `/api/applications/${id}`),
