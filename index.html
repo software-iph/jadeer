@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-lang="ar">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>جدير لإدارة الرعاية الصحية</title>
+    <meta name="description" content="Jadeer: healthcare facility management, medical services and TPA / insurance administration in Libya." />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Montserrat:wght@300;400;500;600;700&family=El+Messiri:wght@400;500;600&family=Readex+Pro:wght@300;400;500;600&display=swap" />
+    <script>
+      // Set language/direction and loader state before first paint (avoids a flash).
+      (function () {
+        var d = document.documentElement, l = null;
+        try { l = localStorage.getItem('jadeer-lang-ar') } catch (e) {}
+        if (location.hash === '#en') l = 'en';
+        l = l === 'en' ? 'en' : 'ar';
+        d.setAttribute('data-lang', l); d.setAttribute('lang', l); d.setAttribute('dir', l === 'ar' ? 'rtl' : 'ltr');
+        d.classList.add('loading');
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

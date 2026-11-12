@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// All editable site content is stored as one JSON document per key
+/// (key "site" holds every section, in English and Arabic).
+model Content {
+  key       String   @id
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
+/// Dashboard users.
+model Admin {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+/// Files uploaded from the dashboard (stored in /uploads on disk).
+model Upload {
+  id           Int      @id @default(autoincrement())
+  filename     String   @unique
+  originalName String
+  mimeType     String
+  size         Int
+  createdAt    DateTime @default(now())
+}
+
+/// Job applications sent from the Careers page (CV files live in /private-uploads, admin-only).
+model Application {
+  id        Int      @id @default(autoincrement())
+  jobId     String?
+  jobTitle  String
+  name      String
+  email     String
+  phone     String   @default("")
+  message   String   @default("")
+  cvFile    String?
+  cvName    String?
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+
+  @@index([jobId])
+  @@index([createdAt])
+}
