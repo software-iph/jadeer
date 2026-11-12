@@ -20,7 +20,7 @@ Data is kept in Docker volumes, so it survives restarts and updates:
 | `APP_PORT` | `3010` (bound to 127.0.0.1 only) | host ports already used: 80, 81, 443, 3001, 3003, 3004, 3006, 3008 |
 | Resources | 11 GB RAM available, 123 GB disk free | plenty for the build |
 
-Still to confirm before deploying: `sudo ss -tlnp | grep ':3010'` prints nothing (port free).
+Port 3010 confirmed free on the VPS (12 Nov 2026). All checks done — ready to deploy.
 
 ---
 
