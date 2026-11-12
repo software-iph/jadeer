@@ -19,5 +19,5 @@ done
 echo "[jadeer] seeding (first admin + default content, only if missing)…"
 node server/seed.js
 
-echo "[jadeer] starting server on port ${PORT:-4000}"
+echo "[jadeer] starting server on port ${PORT:-3010}"
 exec "$@"

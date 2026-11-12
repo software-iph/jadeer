@@ -4,7 +4,7 @@
 #   docker compose up -d --build
 #
 # In Nginx Proxy Manager add a Proxy Host:
-#   Forward Hostname: jadeer-app   Forward Port: 4000   (when PROXY_NETWORK is NPM's network)
+#   Forward Hostname: jadeer-app   Forward Port: 3010   (when PROXY_NETWORK is NPM's network)
 #   — or —  Forward Hostname: <VPS IP>   Forward Port: ${APP_PORT}
 # See DEPLOY.md for the full steps.
 
@@ -42,14 +42,14 @@ services:
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@jadeer.ly}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env}
-      PORT: 4000
+      PORT: 3010
       TRUST_PROXY: 1
     volumes:
       - uploads:/app/uploads                  # images/videos uploaded from the dashboard
       - private-uploads:/app/private-uploads  # applicants' CVs (admin-only)
     # Only on 127.0.0.1 unless you change APP_BIND — the public goes through Nginx Proxy Manager.
     ports:
-      - "${APP_BIND:-127.0.0.1}:${APP_PORT:-4010}:4000"
+      - "${APP_BIND:-127.0.0.1}:${APP_PORT:-3010}:3010"
     networks:
       - internal
       - proxy

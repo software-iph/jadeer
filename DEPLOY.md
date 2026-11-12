@@ -4,7 +4,7 @@ The site runs as two containers:
 
 | Container   | What it is                                   | Reachable from        |
 |-------------|----------------------------------------------|-----------------------|
-| `jadeer-app`| website + dashboard (`/admin`) + API, port 4000 | Nginx Proxy Manager |
+| `jadeer-app`| website + dashboard (`/admin`) + API, port 3010 | Nginx Proxy Manager |
 | `jadeer-db` | PostgreSQL 18                                | only `jadeer-app`     |
 
 Data is kept in Docker volumes, so it survives restarts and updates:
@@ -15,12 +15,12 @@ Data is kept in Docker volumes, so it survives restarts and updates:
 | Setting | Value | Why |
 |---|---|---|
 | `PROXY_NETWORK` | `proxy` | Nginx Proxy Manager (`nginx-proxy-manager`) is on the `proxy` network, like `iph-site`, `qoot-web`, `alqudra-web` |
-| NPM Forward Hostname / Port | `jadeer-app` / `4000` | same way the other sites are forwarded (by container name) |
+| NPM Forward Hostname / Port | `jadeer-app` / `3010` | same way the other sites are forwarded (by container name) |
 | Database | `postgres:18-alpine` in its own `jadeer_internal` network | same image as `iph-db`, `alqudra-db`, `enmaa-db`; not shared with other sites |
-| `APP_PORT` | `4010` (bound to 127.0.0.1 only) | host ports already used: 80, 81, 443, 3001, 3003, 3004, 3006, 3008 |
+| `APP_PORT` | `3010` (bound to 127.0.0.1 only) | host ports already used: 80, 81, 443, 3001, 3003, 3004, 3006, 3008 |
 | Resources | 11 GB RAM available, 123 GB disk free | plenty for the build |
 
-Still to confirm before deploying: `sudo ss -tlnp | grep ':4010'` prints nothing (port free).
+Still to confirm before deploying: `sudo ss -tlnp | grep ':3010'` prints nothing (port free).
 
 ---
 
@@ -38,7 +38,7 @@ docker network ls
 docker ps --format '{{.Names}}  {{.Image}}  networks: {{.Networks}}' | grep -i -E 'nginx|npm|proxy'
 ```
 ```bash
-sudo ss -tlnp | grep -E ':(80|443|81|4010)\b'
+sudo ss -tlnp | grep -E ':(80|443|81|3010)\b'
 ```
 ```bash
 docker compose version && free -h && df -h /
@@ -46,7 +46,7 @@ docker compose version && free -h && df -h /
 
 What to look for:
 - **The network Nginx Proxy Manager is on** (3rd command) — usually something like `npm_default`, `nginx-proxy-manager_default` or `proxy`. That goes into `PROXY_NETWORK`.
-- **Port 4010 must be free** (4th command prints nothing for 4010). If it's used, pick another `APP_PORT`.
+- **Port 3010 must be free** (4th command prints nothing for 3010). If it's used, pick another `APP_PORT`.
 - At least **1 GB free RAM** and **3 GB free disk** for the build.
 
 ---
@@ -78,11 +78,11 @@ docker compose up -d --build
 ```bash
 docker compose logs -f app
 ```
-Wait for `Jadeer API on http://localhost:4000` (Ctrl+C leaves the logs; the site keeps running).
+Wait for `Jadeer API on http://localhost:3010` (Ctrl+C leaves the logs; the site keeps running).
 
 Quick check from the VPS itself:
 ```bash
-curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:4010/
+curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:3010/
 ```
 `200` means it works.
 
@@ -95,7 +95,7 @@ curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:4010/
 | Domain Names | `jadeer.ly`, `www.jadeer.ly` (your domain) |
 | Scheme | `http` |
 | Forward Hostname / IP | `jadeer-app` |
-| Forward Port | `4000` |
+| Forward Port | `3010` |
 | Cache Assets | off |
 | Block Common Exploits | on |
 | Websockets Support | off (not needed) |
@@ -109,8 +109,8 @@ proxy_read_timeout 120s;
 ```
 
 > If NPM is **not** in Docker (or can't use `jadeer-app`): forward to the VPS IP instead —
-> Forward Hostname = the VPS's private/docker gateway IP (often `172.17.0.1`), Forward Port = `4010`,
-> and set `APP_BIND=0.0.0.0` in `.env` (then block port 4010 in the firewall: `sudo ufw deny 4010`).
+> Forward Hostname = the VPS's private/docker gateway IP (often `172.17.0.1`), Forward Port = `3010`,
+> and set `APP_BIND=0.0.0.0` in `.env` (then block port 3010 in the firewall: `sudo ufw deny 3010`).
 
 Make sure the domain's DNS **A record** points to the VPS IP before requesting the certificate.
 
