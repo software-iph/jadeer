@@ -33,3 +33,7 @@ Change the admin password from the dashboard after the first login.
 - `server/index.js` — API (login, content, uploads)
 - `prisma/schema.prisma` — database tables
 - `src/styles/` — `global.css` (original design), `updates.css`, `pages.css`
+
+## Deploy with Docker (VPS + Nginx Proxy Manager)
+
+See [DEPLOY.md](DEPLOY.md): `cp .env.docker.example .env`, edit it, then `docker compose up -d --build`.

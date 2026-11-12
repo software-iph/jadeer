@@ -33,6 +33,9 @@ fs.mkdirSync(UPLOAD_DIR, { recursive: true })
 const prisma = new PrismaClient()
 const app = express()
 app.disable('x-powered-by')
+// Behind a reverse proxy (Nginx Proxy Manager / Docker): trust its X-Forwarded-* headers so
+// rate limits see each visitor's real IP and HTTPS is detected. TRUST_PROXY = number of proxies.
+if (process.env.TRUST_PROXY) app.set('trust proxy', Number(process.env.TRUST_PROXY) || 1)
 app.use(express.json({ limit: '2mb' }))
 app.use(cookieParser())
 
@@ -215,4 +218,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Server error' })
 })
 
-app.listen(PORT, () => console.log(`Jadeer API on http://localhost:${PORT}`))
+const server = app.listen(PORT, () => console.log(`Jadeer API on http://localhost:${PORT}`))
+
+// Stop cleanly on `docker stop` / restarts (Node as PID 1 ignores these signals otherwise).
+for (const sig of ['SIGTERM', 'SIGINT']) {
+  process.on(sig, () => {
+    server.close(() => prisma.$disconnect().finally(() => process.exit(0)))
+    setTimeout(() => process.exit(0), 8000).unref()
+  })
+}

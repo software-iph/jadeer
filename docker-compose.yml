@@ -1,0 +1,67 @@
+# Jadeer website on a VPS behind Nginx Proxy Manager.
+#
+#   cp .env.docker.example .env      # then edit the values
+#   docker compose up -d --build
+#
+# In Nginx Proxy Manager add a Proxy Host:
+#   Forward Hostname: jadeer-app   Forward Port: 4000   (when PROXY_NETWORK is NPM's network)
+#   — or —  Forward Hostname: <VPS IP>   Forward Port: ${APP_PORT}
+# See DEPLOY.md for the full steps.
+
+name: jadeer
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: jadeer-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: jadeer
+      POSTGRES_USER: jadeer
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jadeer -d jadeer"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - internal          # database is never reachable from outside
+
+  app:
+    build: .
+    image: jadeer-app:latest
+    container_name: jadeer-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://jadeer:${POSTGRES_PASSWORD}@db:5432/jadeer?schema=public
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@jadeer.ly}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env}
+      PORT: 4000
+      TRUST_PROXY: 1
+    volumes:
+      - uploads:/app/uploads                  # images/videos uploaded from the dashboard
+      - private-uploads:/app/private-uploads  # applicants' CVs (admin-only)
+    # Only on 127.0.0.1 unless you change APP_BIND — the public goes through Nginx Proxy Manager.
+    ports:
+      - "${APP_BIND:-127.0.0.1}:${APP_PORT:-4010}:4000"
+    networks:
+      - internal
+      - proxy
+
+volumes:
+  db-data:
+  uploads:
+  private-uploads:
+
+networks:
+  internal:
+  proxy:
+    # The Docker network Nginx Proxy Manager is on (find it with: docker network ls).
+    external: true
+    name: ${PROXY_NETWORK:?Set PROXY_NETWORK in .env (the network Nginx Proxy Manager uses)}
