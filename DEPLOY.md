@@ -5,10 +5,22 @@ The site runs as two containers:
 | Container   | What it is                                   | Reachable from        |
 |-------------|----------------------------------------------|-----------------------|
 | `jadeer-app`| website + dashboard (`/admin`) + API, port 4000 | Nginx Proxy Manager |
-| `jadeer-db` | PostgreSQL 17                                | only `jadeer-app`     |
+| `jadeer-db` | PostgreSQL 18                                | only `jadeer-app`     |
 
 Data is kept in Docker volumes, so it survives restarts and updates:
 `jadeer_db-data` (database), `jadeer_uploads` (dashboard images/videos), `jadeer_private-uploads` (CVs).
+
+## Values for the iph VPS (checked 12 Nov 2026)
+
+| Setting | Value | Why |
+|---|---|---|
+| `PROXY_NETWORK` | `proxy` | Nginx Proxy Manager (`nginx-proxy-manager`) is on the `proxy` network, like `iph-site`, `qoot-web`, `alqudra-web` |
+| NPM Forward Hostname / Port | `jadeer-app` / `4000` | same way the other sites are forwarded (by container name) |
+| Database | `postgres:18-alpine` in its own `jadeer_internal` network | same image as `iph-db`, `alqudra-db`, `enmaa-db`; not shared with other sites |
+| `APP_PORT` | `4010` (bound to 127.0.0.1 only) | host ports already used: 80, 81, 443, 3001, 3003, 3004, 3006, 3008 |
+| Resources | 11 GB RAM available, 123 GB disk free | plenty for the build |
+
+Still to confirm before deploying: `sudo ss -tlnp | grep ':4010'` prints nothing (port free).
 
 ---
 

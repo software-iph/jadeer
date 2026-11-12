@@ -12,7 +12,7 @@ name: jadeer
 
 services:
   db:
-    image: postgres:17-alpine
+    image: postgres:18-alpine            # same version as the other sites on the VPS
     container_name: jadeer-db
     restart: unless-stopped
     environment:
@@ -20,7 +20,7 @@ services:
       POSTGRES_USER: jadeer
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql      # PostgreSQL 18+ keeps its data under this folder
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U jadeer -d jadeer"]
       interval: 5s
